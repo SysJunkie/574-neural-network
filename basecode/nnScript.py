@@ -24,8 +24,8 @@ def initializeWeights(n_in, n_out):
 def sigmoid(z):
     """# Notice that z can be a scalar, a vector or a matrix
     # return the sigmoid of input z"""
-
-    return  # your code here
+    z = np.array(z)
+    return  1 / (1 + np.exp(-1 * z)) # your code here
 
 
 def preprocess():
@@ -126,6 +126,18 @@ def preprocess():
 
     # Feature selection
     # Your code here.
+    pixels = 28*28
+    columns = []
+    
+    backgroundcolor=train_data[0,0]
+    for i in range(pixels):
+        train = all(x == backgroundcolor for x in train_data[:,i])
+        if(train==True):
+            columns.append(i)
+    print(len(columns))
+    train_data = np.delete(train_data, columns, axis=1)
+    validation_data = np.delete(validation_data, columns, axis=1)
+    test_data = np.delete(test_data, columns, axis=1)
 
     print('preprocess done')
 
@@ -182,14 +194,44 @@ def nnObjFunction(params, *args):
     #
     #
     #
-
-
-
+    trainingSize = training_data.shape[0]
+    # Adding a column 
+    training_data = np.append(training_data,np.ones([len(training_data),1]),1)
+    # Transpose
+    training_data = training_data.T
+    # 
+    hiddenLayerOutput = sigmoid(np.dot(w1,training_data))
+    
+    hiddenLayerOutput=hiddenLayerOutput.T
+    #Adding bias column
+    hiddenLayerOutput = np.append(hiddenLayerOutput,np.ones([hiddenLayerOutput.shape[0],1]),1)
+    output = sigmoid(np.dot(w2,hiddenLayerOutput.T)) 
+    outputclass = np.zeros((n_class,training_data.shape[1]))
+    for i in range(len(training_label)):
+        label= int(training_label[i])
+        outputclass[label,i] = 1
     # Make sure you reshape the gradient matrices to a 1D array. for instance if your gradient matrices are grad_w1 and grad_w2
     # you would use code similar to the one below to create a flat array
     # obj_grad = np.concatenate((grad_w1.flatten(), grad_w2.flatten()),0)
     obj_grad = np.array([])
+    obj = 0.0
+    grad_w1 = 0.0
+    grad_w2  = 0.0
+    obj += np.sum(outputclass * np.log(output) + (1.0-outputclass) * np.log(1.0-output))
+    deltaOut = output - outputclass  
+    grad_w2 =  np.dot(deltaOut.reshape((n_class,training_data.shape[1])), hiddenLayerOutput)
+    deltaOutSum = np.dot(deltaOut.T,w2)
+    deltaOutSum = deltaOutSum[0:deltaOutSum.shape[0], 0:deltaOutSum.shape[1]-1]
+    deltaHidden = ((1.0-hiddenLayerOutput) * hiddenLayerOutput*deltaOutSum.T)
+    grad_w1 =  np.dot(deltaHidden.reshape((n_hidden,training_data.shape[1])) , (training_data.T))
 
+    obj = ((-1)*obj)/trainingSize
+    randomization = np.sum(np.sum(w1**2)) + np.sum(np.sum(w2**2))
+    obj = obj + ((lambdaval * randomization) / (2.0*trainingSize))
+    grad_w1 = (grad_w1 + lambdaval * w1) / trainingSize
+    grad_w2 = (grad_w2 + lambdaval * w2) / trainingSize
+    obj_val = obj
+    obj_grad = np.concatenate((grad_w1.flatten(), grad_w2.flatten()),0)
     return (obj_val, obj_grad)
 
 
@@ -212,7 +254,17 @@ def nnPredict(w1, w2, data):
 
     labels = np.array([])
     # Your code here
-
+    for d in data:
+        inputWithBias=np.hstack((d,np.ones(1.0)))
+        hiddenLayerOutput = np.dot(w1,inputWithBias)
+        hiddenLayerOutput = sigmoid(hiddenLayerOutput)
+        
+        hiddenOutputWithBias=np.hstack((hiddenLayerOutput,np.ones(1.0)))
+        output = np.dot(w2,hiddenOutputWithBias)
+        output=sigmoid(output)
+        labels.append(np.argmax(output,axis=0))
+        
+    labels = np.array(labels)
     return labels
 
 
