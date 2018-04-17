@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.io import loadmat
 from math import sqrt
-
+import time
 
 def initializeWeights(n_in, n_out):
     """
@@ -24,7 +24,7 @@ def initializeWeights(n_in, n_out):
 def sigmoid(z):
     """# Notice that z can be a scalar, a vector or a matrix
     # return the sigmoid of input z"""
-    z = np.array(z)
+    # z = np.array(z)
     return  1 / (1 + np.exp(-1 * z)) # your code here
 
 
@@ -126,18 +126,17 @@ def preprocess():
 
     # Feature selection
     # Your code here.
-    # Removing undistinguishing attributes
-    columns = []
-    
-    backgroundcolor=train_data[0,0]
-    for i in range(784):
-        train = all(x == backgroundcolor for x in train_data[:,i])
-        if(train==True):
-            columns.append(i)
-    #print(len(columns))
-    train_data = np.delete(train_data, columns, axis=1)
-    validation_data = np.delete(validation_data, columns, axis=1)
-    test_data = np.delete(test_data, columns, axis=1)
+    # Remove uninformative attributes
+
+    uninformative_row = np.all(train_data == train_data[0,:], axis=0)
+    uninformative_column = np.where(uninformative_row)
+
+    # Get the columns that do not contribute to the network
+    # print(uninformative_column)
+
+    train_data = np.delete(train_data, uninformative_column, axis=1)
+    test_data = np.delete(test_data, uninformative_column, axis=1)
+    validation_data = np.delete(validation_data, uninformative_column, axis=1)
 
     print('preprocess done')
 
@@ -147,7 +146,7 @@ def preprocess():
 def nnObjFunction(params, *args):
     """% nnObjFunction computes the value of objective function (negative log 
     %   likelihood error function with regularization) given the parameters 
-    %   of Neural Networks, thetraining data, their corresponding training 
+    %   of Neural Networks, the training data, their corresponding training
     %   labels and lambda - regularization hyper-parameter.
 
     % Input:
@@ -188,50 +187,60 @@ def nnObjFunction(params, *args):
     w2 = params[(n_hidden * (n_input + 1)):].reshape((n_class, (n_hidden + 1)))
     obj_val = 0
 
-    # Your code here
-    #
-    #
-    #
-    #
-    #
-    trainingSize = training_data.shape[0]
-    # Adding a column 
-    training_data = np.append(training_data,np.ones([len(training_data),1]),1)
-    # Transpose
-    training_data = np.transpose(training_data)
-    # 
-    hiddenLayerOutput = sigmoid(np.dot(w1,training_data))
-    
-    hiddenLayerOutput= np.transpose(hiddenLayerOutput)
-    #Adding bias column
-    hiddenLayerOutput = np.append(hiddenLayerOutput,np.ones([hiddenLayerOutput.shape[0],1]),1)
-    output = sigmoid(np.dot(w2, np.transpose(hiddenLayerOutput))) 
-    outputclass = np.zeros((n_class,training_data.shape[1]))
-    for i in range(len(training_label)):
-        label= int(training_label[i])
-        outputclass[label,i] = 1
-    # Make sure you reshape the gradient matrices to a 1D array. for instance if your gradient matrices are grad_w1 and grad_w2
-    # you would use code similar to the one below to create a flat array
-    # obj_grad = np.concatenate((grad_w1.flatten(), grad_w2.flatten()),0)
-    obj_grad = np.array([])
-    obj = 0.0
-    grad_w1 = 0.0
-    grad_w2  = 0.0
-    obj += np.sum(outputclass * np.log(output) + (1.0-outputclass) * np.log(1.0-output))
-    deltaOut = output - outputclass  
-    grad_w2 =  np.dot(deltaOut.reshape((n_class,training_data.shape[1])), hiddenLayerOutput)
-    deltaOutSum = np.dot( np.transpose(deltaOut),w2)
-    deltaOutSum = deltaOutSum[0:deltaOutSum.shape[0], 0:deltaOutSum.shape[1]-1]
-    deltaHidden = ((1.0-hiddenLayerOutput) * hiddenLayerOutput* np.transpose(deltaOutSum))
-    grad_w1 =  np.dot(deltaHidden.reshape((n_hidden,training_data.shape[1])) ,  np.transpose(training_data))
+    # Your Code Here
+    pad = np.ones(shape=(len(training_data),1))
+    training_data = np.concatenate((training_data, pad), axis=1)
+    summ1 = training_data.dot(w1.T)
+    output_1 = sigmoid(summ1) # Hidden layer Output
 
-    obj = ((-1)*obj)/trainingSize
-    randomization = np.sum(np.sum(w1**2)) + np.sum(np.sum(w2**2))
-    obj = obj + ((lambdaval * randomization) / (2.0*trainingSize))
-    grad_w1 = (grad_w1 + lambdaval * w1) / trainingSize
-    grad_w2 = (grad_w2 + lambdaval * w2) / trainingSize
-    obj_val = obj
-    obj_grad = np.concatenate((grad_w1.flatten(), grad_w2.flatten()),0)
+    sig_pad = np.ones(shape=(len(output_1),1))
+    output_1 = np.concatenate((output_1, sig_pad), axis=1)
+    summ_2 = output_1.dot(w2.T)
+    output_2 = sigmoid(summ_2)
+
+    outputclass = np.zeros((np.shape(output_2)))
+
+    for i in range(len(training_label)):
+        label = int(training_label[i])
+        outputclass[label, i] = 1
+
+    #-------------------------------------------------------
+    # Error function calculation
+
+    first_term = outputclass * np.log(output_2)
+    second_term = (1 - outputclass) * np.log(1 - output_2)
+    third_term = first_term + second_term
+
+    obj_val = (-1/len(training_data)) * np.sum(third_term)
+
+    #-------------------------------------------------------
+    # Regularization
+    constant = lambdaval / (2*len(training_data))
+    first_term = np.sum(np.square(w1), axis=1)
+    second_term = np.sum(np.square(w2), axis=1)
+    final_term = np.sum(first_term, axis=0)+np.sum(second_term, axis=0)
+    obj_val = obj_val + (constant * final_term)
+
+    #-------------------------------------------------------
+    # Calculate Gradient
+
+    gradient_w2 = np.zeros(w2.shape)
+    gradient_w1 = np.zeros(w1.shape)
+
+    delta = np.subtract(output_2, outputclass)
+
+    gradient_w2 = (1/len(training_data)) * (delta.T).dot(output_2)
+    gradient_w2 = gradient_w2 + (lambdaval*w2/len(training_data))
+
+    mult = (1 - output_1[:,:n_hidden])*output_1[:,:n_hidden]
+    delta = delta.dot(w2[:,:n_hidden])
+    mult = mult * delta
+
+    gradient_w1 = (1/len(training_data))*((mult.T).dot(training_data))
+    gradient_w1 = gradient_w1 + (lambdaval*w1/len(training_data))
+
+    obj_grad = np.concatenate((gradient_w1.flatten(), gradient_w2.flatten()),0)
+
     return (obj_val, obj_grad)
 
 
@@ -254,21 +263,22 @@ def nnPredict(w1, w2, data):
 
     labels = np.array([])
     # Your code here
-    for d in data:
-        inputWithBias=np.hstack((d,np.ones(1.0)))
-        hiddenLayerOutput = np.dot(w1,inputWithBias)
-        hiddenLayerOutput = sigmoid(hiddenLayerOutput)
-        
-        hiddenOutputWithBias=np.hstack((hiddenLayerOutput,np.ones(1.0)))
-        output = np.dot(w2,hiddenOutputWithBias)
-        output=sigmoid(output)
-        labels.append(np.argmax(output,axis=0))
-        
-    labels = np.array(labels)
+
+    data = np.concatenate((data, np.ones(shape=(len(data),1))), axis=1)
+    summ = data.dot(w1.T)
+    output = sigmoid(summ)
+    output = np.concatenate((output, np.ones(shape=(len(output), 1))), axis=1)
+    summ2 = output.dot(w2.T)
+    output_2 = sigmoid(summ2)
+
+    labels = np.argmax(output_2, axis=1)
+
     return labels
 
 
 """**************Neural Network Script Starts here********************************"""
+
+now = time.time()
 
 train_data, train_label, validation_data, validation_label, test_data, test_label = preprocess()
 
@@ -314,18 +324,24 @@ w2 = nn_params.x[(n_hidden * (n_input + 1)):].reshape((n_class, (n_hidden + 1)))
 
 predicted_label = nnPredict(w1, w2, train_data)
 
+traintime = time.time() - now
 # find the accuracy on Training Dataset
-
+print(traintime)
 print('\n Training set Accuracy:' + str(100 * np.mean((predicted_label == train_label).astype(float))) + '%')
 
+
 predicted_label = nnPredict(w1, w2, validation_data)
+predictiontime = time.time() - now
 
 # find the accuracy on Validation Dataset
-
+print(predictiontime)
 print('\n Validation set Accuracy:' + str(100 * np.mean((predicted_label == validation_label).astype(float))) + '%')
+
 
 predicted_label = nnPredict(w1, w2, test_data)
 
-# find the accuracy on Validation Dataset
+# find the accuracy on test Dataset
+predictiontime = time.time() - now
+print(predictiontime)
 
 print('\n Test set Accuracy:' + str(100 * np.mean((predicted_label == test_label).astype(float))) + '%')
