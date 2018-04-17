@@ -126,15 +126,15 @@ def preprocess():
 
     # Feature selection
     # Your code here.
-    pixels = 28*28
+    # Removing undistinguishing attributes
     columns = []
     
     backgroundcolor=train_data[0,0]
-    for i in range(pixels):
+    for i in range(784):
         train = all(x == backgroundcolor for x in train_data[:,i])
         if(train==True):
             columns.append(i)
-    print(len(columns))
+    #print(len(columns))
     train_data = np.delete(train_data, columns, axis=1)
     validation_data = np.delete(validation_data, columns, axis=1)
     test_data = np.delete(test_data, columns, axis=1)
@@ -198,14 +198,14 @@ def nnObjFunction(params, *args):
     # Adding a column 
     training_data = np.append(training_data,np.ones([len(training_data),1]),1)
     # Transpose
-    training_data = training_data.T
+    training_data = np.transpose(training_data)
     # 
     hiddenLayerOutput = sigmoid(np.dot(w1,training_data))
     
-    hiddenLayerOutput=hiddenLayerOutput.T
+    hiddenLayerOutput= np.transpose(hiddenLayerOutput)
     #Adding bias column
     hiddenLayerOutput = np.append(hiddenLayerOutput,np.ones([hiddenLayerOutput.shape[0],1]),1)
-    output = sigmoid(np.dot(w2,hiddenLayerOutput.T)) 
+    output = sigmoid(np.dot(w2, np.transpose(hiddenLayerOutput))) 
     outputclass = np.zeros((n_class,training_data.shape[1]))
     for i in range(len(training_label)):
         label= int(training_label[i])
@@ -220,10 +220,10 @@ def nnObjFunction(params, *args):
     obj += np.sum(outputclass * np.log(output) + (1.0-outputclass) * np.log(1.0-output))
     deltaOut = output - outputclass  
     grad_w2 =  np.dot(deltaOut.reshape((n_class,training_data.shape[1])), hiddenLayerOutput)
-    deltaOutSum = np.dot(deltaOut.T,w2)
+    deltaOutSum = np.dot( np.transpose(deltaOut),w2)
     deltaOutSum = deltaOutSum[0:deltaOutSum.shape[0], 0:deltaOutSum.shape[1]-1]
-    deltaHidden = ((1.0-hiddenLayerOutput) * hiddenLayerOutput*deltaOutSum.T)
-    grad_w1 =  np.dot(deltaHidden.reshape((n_hidden,training_data.shape[1])) , (training_data.T))
+    deltaHidden = ((1.0-hiddenLayerOutput) * hiddenLayerOutput* np.transpose(deltaOutSum))
+    grad_w1 =  np.dot(deltaHidden.reshape((n_hidden,training_data.shape[1])) ,  np.transpose(training_data))
 
     obj = ((-1)*obj)/trainingSize
     randomization = np.sum(np.sum(w1**2)) + np.sum(np.sum(w2**2))
