@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dbbdfc15-66a4-4de6-86cb-3bf766478170" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/basecode/cnnScript.py" beforeDir="false" afterPath="$PROJECT_DIR$/basecode/cnnScript.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/basecode/deepnnScript.py" beforeDir="false" afterPath="$PROJECT_DIR$/basecode/deepnnScript.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/basecode/facennScript.py" beforeDir="false" afterPath="$PROJECT_DIR$/basecode/facennScript.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/basecode/nnScript.py" beforeDir="false" afterPath="$PROJECT_DIR$/basecode/nnScript.py" afterDir="false" />
     </list>
@@ -14,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="nnScript.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="nnScript.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/basecode/nnScript.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2366">
-              <caret line="334" lean-forward="true" selection-start-line="334" selection-end-line="334" />
+            <state relative-caret-position="226">
+              <caret line="310" column="14" selection-start-line="310" selection-start-column="14" selection-end-line="310" selection-end-column="14" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -29,8 +31,8 @@
       <file leaf-file-name="facennScript.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/basecode/facennScript.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="163" column="29" lean-forward="true" selection-start-line="163" selection-start-column="29" selection-end-line="163" selection-end-column="29" />
+            <state relative-caret-position="293">
+              <caret line="151" column="14" selection-start-line="151" selection-start-column="14" selection-end-line="151" selection-end-column="14" />
               <folding>
                 <element signature="e#69#87#0" expanded="true" />
               </folding>
@@ -41,8 +43,8 @@
       <file leaf-file-name="deepnnScript.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/basecode/deepnnScript.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+            <state relative-caret-position="167">
+              <caret line="104" column="16" lean-forward="true" selection-start-line="104" selection-start-column="16" selection-end-line="104" selection-end-column="16" />
               <folding>
                 <element signature="e#69#92#0" expanded="true" />
               </folding>
@@ -50,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cnnScript.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="cnnScript.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/basecode/cnnScript.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="416" column="28" selection-start-line="416" selection-start-column="24" selection-end-line="416" selection-end-column="28" />
+            <state relative-caret-position="-828">
+              <caret line="344" column="50" selection-start-line="344" selection-start-column="50" selection-end-line="344" selection-end-column="50" />
               <folding>
                 <element signature="e#20#51#0" expanded="true" />
               </folding>
@@ -68,6 +70,7 @@
     <findStrings>
       <find>optimize</find>
       <find>minimize</find>
+      <find>show_example_errors</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -76,9 +79,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/basecode/deepnnScript.py" />
-        <option value="$PROJECT_DIR$/basecode/facennScript.py" />
         <option value="$PROJECT_DIR$/basecode/nnScript.py" />
+        <option value="$PROJECT_DIR$/basecode/facennScript.py" />
+        <option value="$PROJECT_DIR$/basecode/deepnnScript.py" />
+        <option value="$PROJECT_DIR$/basecode/cnnScript.py" />
       </list>
     </option>
   </component>
@@ -131,7 +135,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.nnScript">
+  <component name="RunManager" selected="Python.cnnScript">
     <configuration name="cnnScript" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="574-neural-network" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -212,10 +216,10 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.nnScript" />
-        <item itemvalue="Python.facennScript" />
         <item itemvalue="Python.cnnScript" />
         <item itemvalue="Python.deepnnScript" />
+        <item itemvalue="Python.facennScript" />
+        <item itemvalue="Python.nnScript" />
       </list>
     </recent_temporary>
   </component>
@@ -234,7 +238,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3367752" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -294,42 +297,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/basecode/deepnnScript.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
-          <folding>
-            <element signature="e#69#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/basecode/cnnScript.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="416" column="28" selection-start-line="416" selection-start-column="24" selection-end-line="416" selection-end-column="28" />
-          <folding>
-            <element signature="e#20#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/basecode/facennScript.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="163" column="29" lean-forward="true" selection-start-line="163" selection-start-column="29" selection-end-line="163" selection-end-column="29" />
+        <state relative-caret-position="293">
+          <caret line="151" column="14" selection-start-line="151" selection-start-column="14" selection-end-line="151" selection-end-column="14" />
           <folding>
             <element signature="e#69#87#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/basecode/deepnnScript.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="104" column="16" lean-forward="true" selection-start-line="104" selection-start-column="16" selection-end-line="104" selection-end-column="16" />
+          <folding>
+            <element signature="e#69#92#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/basecode/nnScript.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2366">
-          <caret line="334" lean-forward="true" selection-start-line="334" selection-end-line="334" />
+        <state relative-caret-position="226">
+          <caret line="310" column="14" selection-start-line="310" selection-start-column="14" selection-end-line="310" selection-end-column="14" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basecode/cnnScript.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-828">
+          <caret line="344" column="50" selection-start-line="344" selection-start-column="50" selection-end-line="344" selection-end-column="50" />
+          <folding>
+            <element signature="e#20#51#0" expanded="true" />
           </folding>
         </state>
       </provider>

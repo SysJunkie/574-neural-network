@@ -341,8 +341,8 @@ def plot_confusion_matrix(cls_pred):
     # in a single Notebook cell.
     plt.show()
 
-def print_test_accuracy(show_example_errors=False,
-                        show_confusion_matrix=False):
+def print_test_accuracy(show_example_errors=True,
+                        show_confusion_matrix=True):
 
     # Number of images in the test-set.
     num_test = len(data.test.images)

@@ -149,32 +149,34 @@ initial_w2 = initializeWeights(n_hidden, n_class);
 # unroll 2 weight matrices into single column vector
 initialWeights = np.concatenate((initial_w1.flatten(), initial_w2.flatten()),0)
 # set the regularization hyper-parameter
-lambdaval = 10;
+lambdaval = 15;
 args = (n_input, n_hidden, n_class, train_data, train_label, lambdaval)
 
 #Train Neural Network using fmin_cg or minimize from scipy,optimize module. Check documentation for a working example
 opts = {'maxiter' :50}    # Preferred value.
 
 print("Starting to train...")
+now = time.time()
 nn_params = minimize(nnObjFunction, initialWeights, jac=True, args=args,method='CG', options=opts)
 params = nn_params.get('x')
 #Reshape nnParams from 1D vector into w1 and w2 matrices
 w1 = params[0:n_hidden * (n_input + 1)].reshape( (n_hidden, (n_input + 1)))
 w2 = params[(n_hidden * (n_input + 1)):].reshape((n_class, (n_hidden + 1)))
 print("Training complete...")
+print("Time to train", time.time() - now)
 now = time.time()
 #Test the computed parameters
 predicted_label = nnPredict(w1,w2,train_data)
 #find the accuracy on Training Dataset
-print('\n Training set Accuracy:' + str(100*np.mean((predicted_label == train_label).astype(float))) + '%')
-print("Time to Train data", now-time.time())
+print('\nTraining set Accuracy:' + str(100*np.mean((predicted_label == train_label).astype(float))) + '%')
+print("Time to Train data", time.time()-now)
 
 predicted_label = nnPredict(w1,w2,validation_data)
 #find the accuracy on Validation Dataset
-print('\n Validation set Accuracy:' + str(100*np.mean((predicted_label == validation_label).astype(float))) + '%')
-print("Time on Validation data", now-time.time())
+print('\nValidation set Accuracy:' + str(100*np.mean((predicted_label == validation_label).astype(float))) + '%')
+print("Time on Validation data", time.time()-now)
 
 predicted_label = nnPredict(w1,w2,test_data)
 #find the accuracy on Validation Dataset
-print('\n Test set Accuracy:' +  str(100*np.mean((predicted_label == test_label).astype(float))) + '%')
-print("Time on testing data", now-time.time())
+print('\nTest set Accuracy:' +  str(100*np.mean((predicted_label == test_label).astype(float))) + '%')
+print("Time on testing data", time.time()-now)

@@ -138,7 +138,7 @@ def preprocess():
     test_data = np.delete(test_data, uninformative_column, axis=1)
     validation_data = np.delete(validation_data, uninformative_column, axis=1)
 
-    print('preprocess done')
+    print('Preprocess done')
 
     return train_data, train_label, validation_data, validation_label, test_data, test_label
 
@@ -295,7 +295,7 @@ train_data, train_label, validation_data, validation_label, test_data, test_labe
 n_input = train_data.shape[1]
 
 # set the number of nodes in hidden unit (not including bias unit)
-n_hidden = 50
+n_hidden = 20
 
 # set the number of nodes in output unit
 n_class = 10
@@ -308,7 +308,7 @@ initial_w2 = initializeWeights(n_hidden, n_class)
 initialWeights = np.concatenate((initial_w1.flatten(), initial_w2.flatten()), 0)
 
 # set the regularization hyper-parameter
-lambdaval = 0
+lambdaval = 60
 
 args = (n_input, n_hidden, n_class, train_data, train_label, lambdaval)
 
@@ -317,7 +317,7 @@ args = (n_input, n_hidden, n_class, train_data, train_label, lambdaval)
 opts = {'maxiter': 50}  # Preferred value.
 
 nn_params = minimize(nnObjFunction, initialWeights, jac=True, args=args, method='CG', options=opts)
-print("time to train", time.time()-now)
+print("Time to train", time.time()-now,"seconds")
 # In Case you want to use fmin_cg, you may have to split the nnObjectFunction to two functions nnObjFunctionVal
 # and nnObjGradient. Check documentation for this function before you proceed.
 # nn_params, cost = fmin_cg(nnObjFunctionVal, initialWeights, nnObjGradient,args = args, maxiter = 50)
@@ -331,15 +331,15 @@ w2 = nn_params.x[(n_hidden * (n_input + 1)):].reshape((n_class, (n_hidden + 1)))
 
 predicted_label = nnPredict(w1, w2, train_data)
 # find the accuracy on Training Dataset
-print('\n Training set Accuracy:' + str(100 * np.mean((predicted_label == train_label).astype(float))) + '%')
+print('\nTraining set Accuracy:' + str(100 * np.mean((predicted_label == train_label).astype(float))) + '%')
 
 predicted_label = nnPredict(w1, w2, validation_data)
 # find the accuracy on Validation Dataset
-print('\n Validation set Accuracy:' + str(100 * np.mean((predicted_label == validation_label).astype(float))) + '%')
+print('\nValidation set Accuracy:' + str(100 * np.mean((predicted_label == validation_label).astype(float))) + '%')
 
 predicted_label = nnPredict(w1, w2, test_data)
 # find the accuracy on test Dataset
-print('\n Test set Accuracy:' + str(100 * np.mean((predicted_label == test_label).astype(float))) + '%')
+print('\nTest set Accuracy:' + str(100 * np.mean((predicted_label == test_label).astype(float))) + '%')
 
 print("No. of hidden nodes", n_hidden)
 print("Lambda Value", lambdaval)
