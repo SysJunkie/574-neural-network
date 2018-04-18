@@ -189,20 +189,26 @@ def nnObjFunction(params, *args):
 
     # Your Code Here
     pad = np.ones(shape=(len(training_data),1))
+    # print(np.shape(training_data))
     training_data = np.concatenate((training_data, pad), axis=1)
+    # print(np.shape(training_data))
     summ1 = training_data.dot(w1.T)
     output_1 = sigmoid(summ1) # Hidden layer Output
+    # print(np.shape(output_1))
 
     sig_pad = np.ones(shape=(len(output_1),1))
     output_1 = np.concatenate((output_1, sig_pad), axis=1)
     summ_2 = output_1.dot(w2.T)
     output_2 = sigmoid(summ_2)
+    # print(np.shape(output_2))
 
-    outputclass = np.zeros((np.shape(output_2)))
-
-    for i in range(len(training_label)):
-        label = int(training_label[i])
-        outputclass[label, i] = 1
+    outputclass = np.zeros(np.shape(output_2))
+    # print(np.shape(outputclass))
+    # print(np.shape(training_label))
+    for i in range(len(outputclass)):
+        for j in range(np.shape(outputclass)[1]):
+            if j == int(training_label[i]):
+                outputclass[i][j] = 1
 
     #-------------------------------------------------------
     # Error function calculation
@@ -225,12 +231,13 @@ def nnObjFunction(params, *args):
     # Calculate Gradient
 
     gradient_w2 = np.zeros(w2.shape)
-    gradient_w1 = np.zeros(w1.shape)
 
+    gradient_w1 = np.zeros(w1.shape)
     delta = np.subtract(output_2, outputclass)
 
-    gradient_w2 = (1/len(training_data)) * (delta.T).dot(output_2)
-    gradient_w2 = gradient_w2 + (lambdaval*w2/len(training_data))
+    gradient_w2 = (1/len(training_data)) * (delta.T).dot(output_1)
+    # print(gradient_w2.shape)
+    gradient_w2 = gradient_w2 + ((lambdaval*w2)/len(training_data))
 
     mult = (1 - output_1[:,:n_hidden])*output_1[:,:n_hidden]
     delta = delta.dot(w2[:,:n_hidden])
@@ -310,7 +317,7 @@ args = (n_input, n_hidden, n_class, train_data, train_label, lambdaval)
 opts = {'maxiter': 50}  # Preferred value.
 
 nn_params = minimize(nnObjFunction, initialWeights, jac=True, args=args, method='CG', options=opts)
-
+print("time to train", time.time()-now)
 # In Case you want to use fmin_cg, you may have to split the nnObjectFunction to two functions nnObjFunctionVal
 # and nnObjGradient. Check documentation for this function before you proceed.
 # nn_params, cost = fmin_cg(nnObjFunctionVal, initialWeights, nnObjGradient,args = args, maxiter = 50)
@@ -323,25 +330,16 @@ w2 = nn_params.x[(n_hidden * (n_input + 1)):].reshape((n_class, (n_hidden + 1)))
 # Test the computed parameters
 
 predicted_label = nnPredict(w1, w2, train_data)
-
-traintime = time.time() - now
 # find the accuracy on Training Dataset
-print(traintime)
 print('\n Training set Accuracy:' + str(100 * np.mean((predicted_label == train_label).astype(float))) + '%')
 
-
 predicted_label = nnPredict(w1, w2, validation_data)
-predictiontime = time.time() - now
-
 # find the accuracy on Validation Dataset
-print(predictiontime)
 print('\n Validation set Accuracy:' + str(100 * np.mean((predicted_label == validation_label).astype(float))) + '%')
 
-
 predicted_label = nnPredict(w1, w2, test_data)
-
 # find the accuracy on test Dataset
-predictiontime = time.time() - now
-print(predictiontime)
-
 print('\n Test set Accuracy:' + str(100 * np.mean((predicted_label == test_label).astype(float))) + '%')
+
+print("No. of hidden nodes", n_hidden)
+print("Lambda Value", lambdaval)
