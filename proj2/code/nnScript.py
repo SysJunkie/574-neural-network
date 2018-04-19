@@ -5,8 +5,7 @@ from math import sqrt
 import time
 import pickle
 
-f = open("params.pickle", "wb")
-dict = {}
+# f = open("params.pickle", "wb")
 def initializeWeights(n_in, n_out):
     """
     # initializeWeights return the random weights for Neural Network given the
@@ -137,7 +136,6 @@ def preprocess():
     # Get the columns that do not contribute to the network
     # print(uninformative_column)
     selected_features = np.where(uninformative_row == False)[0]
-    dict['selected_features'] = selected_features
     # pickle.dump(selected_features, f)
     train_data = np.delete(train_data, uninformative_column, axis=1)
     test_data = np.delete(test_data, uninformative_column, axis=1)
@@ -346,12 +344,7 @@ predicted_label = nnPredict(w1, w2, test_data)
 # find the accuracy on test Dataset
 print('\nTest set Accuracy:' + str(100 * np.mean((predicted_label == test_label).astype(float))) + '%')
 
-dict['n_hidden'] = n_hidden
-dict['w1'] = w1
-dict['w2'] = w2
-dict['lambdaval'] = lambdaval
-pickle.dump(n_hidden, f)
-pickle.dump(w1, f)
-pickle.dump(w2, f)
-pickle.dump(lambdaval, f)
-f.close()
+# pickle.dump(n_hidden, f)
+# pickle.dump(w1, f)
+# pickle.dump(w2, f)
+# pickle.dump(lambdaval, f)
